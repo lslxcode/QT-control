@@ -1,0 +1,2 @@
+m=video 30002 RTP/AVP 96
+a=rtpmap:96 H264/90000

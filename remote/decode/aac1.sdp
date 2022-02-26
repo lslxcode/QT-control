@@ -1,0 +1,5 @@
+a=tool:libavformat 57.83.100
+m=audio 30004 RTP/AVP 97
+b=AS:128
+a=rtpmap:97 MPEG4-GENERIC/48000/2
+a=fmtp:97 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3; config=119056E500

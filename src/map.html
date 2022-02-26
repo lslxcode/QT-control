@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+#l-map{height:500px;width:100%;}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qbW24Ei28AF5fnxbLi0Vii4NAxjbS7Lr"></script>
+<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+<title>GPS转百度</title>
+</head>
+<body>
+<div id="l-map"></div>
+	<div id="r-result">
+		<input type="button" onclick="showOver()" value="显示" />
+		<input type="button" onclick="hideOver()" value="隐藏" />
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+ 
+// 百度地图API功能
+//GPS坐标
+var xx = 108.913160;
+var yy = 34.232053;
+var gpsPoint = new BMap.Point(xx,yy);
+ 
+//地图初始化
+var bm = new BMap.Map("l-map");// 增加显示和隐藏功能需要设置为l-map
+bm.centerAndZoom(gpsPoint, 15);
+bm.enableScrollWheelZoom(true);
+bm.addControl(new BMap.NavigationControl());
+ 
+ 	/*var sy = new BMap.Symbol(BMap_Symbol_SHAPE_BACKWARD_OPEN_ARROW, {
+		scale: 1,//图标缩放大小
+		strokeColor:'#fff',//设置矢量图标的线填充颜色
+		strokeWeight: '2',//设置线宽
+	});
+	var icons = new BMap.IconSequence(sy, '10', '30');	*/
+
+
+var polyline;
+var flag = 0;
+var marker;
+function  drowLine(point)
+{
+	if (flag)
+	{
+		//alert(flag);
+		polyline.setPath(point);
+	}
+	else
+	{
+		   flag = 1;
+		   polyline =new BMap.Polyline(point, {
+		   //enableEditing: false,//是否启用线编辑，默认为false
+		   //enableClicking: true,//是否响应点击事件，默认为true
+		   //icons:[icons],
+		   strokeWeight:'5',//折线的宽度，以像素为单位
+		   strokeOpacity: 1,//折线的透明度，取值范围0 - 1
+		   strokeColor:"#18a45b" //折线颜色
+		});
+		polyline.disableMassClear();
+		//bm.addOverlay(polyline);
+	}
+	
+}
+
+ 
+//坐标转换完之后的回调函数
+/*translateCallback = function (point){
+    var marker = new BMap.Marker(point);
+    bm.addOverlay(marker);
+    bm.setCenter(point);
+
+}*/
+function Clear(){//清除
+  bm.clearOverlays();//清除图层覆盖物
+}
+    //坐标转换完之后的回调函数
+    translateCallback = function (data){
+			poisArray.push(data);
+			drowLine(poisArray);
+			/*if ( poisArray.length >= 10000)						
+			{
+				poisArray=[];
+				poisArray.push(data);
+			}*/
+			Clear();
+			marker = new BMap.Marker(data);
+			bm.addOverlay(marker);
+			bm.setCenter(data);  
+
+    }
+
+var polylineAttr = [];
+var poisArray = [];
+//var marker = new BMap.Marker(gpsPoint);
+function addpoint (x,y){
+        gpsPoint = new BMap.Point(x,y);
+        BMap.Convertor.translate(gpsPoint,0,translateCallback);
+			
+	}
+	
+	function showOver(){
+		 bm.addOverlay(polyline);polyline.show();
+	}
+	function hideOver(){
+		polyline.hide();
+	}
+
+</script>

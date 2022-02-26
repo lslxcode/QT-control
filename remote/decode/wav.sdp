@@ -1,0 +1,3 @@
+m=audio 30004 RTP/AVP 0
+a=rtpmap:0 pcma/8000/1
+a=framerate:25
